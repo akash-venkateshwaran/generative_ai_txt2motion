@@ -1,0 +1,41 @@
+[project]
+name = "salad"
+version = "0.1.0"
+description = "SALAD (CVPR 2025): skeleton-aware latent diffusion for text-driven motion generation and editing"
+readme = "README.md"
+requires-python = "==3.11.*"
+dependencies = [
+    "torch>=2.6",                 # CUDA build comes from the cu126 index below
+    "numpy>=1.26,<2",             # keeps the research code's NumPy 1.x semantics
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "transformers>=4.40,<5",      # CLIP text encoder code targets the 4.x API
+    "diffusers>=0.27",
+    "huggingface-hub",
+    "tokenizers",
+    "pillow",
+    "imageio",
+    "tqdm",
+    "tensorboard",
+]
+
+[dependency-groups]
+app = ["gradio>=5"]              # web demo (the HF Space)
+dev = [
+    "ipykernel",                  # notebooks in VS Code
+    "moviepy>=1.0.3,<2",          # playground.ipynb uses moviepy.editor (gone in 2.x)
+    "gdown>=5.1",                 # prepare/*.sh download from Google Drive
+]
+
+[tool.uv]
+package = false                   # an application, not a library
+default-groups = ["dev", "app"]   # `uv sync` installs both locally
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true                   # only packages mapped below use this index
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
