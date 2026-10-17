@@ -28,9 +28,7 @@ class EvaluatorModelWrapper(object):
 
     def __init__(self, opt):
 
-        if opt.dataset_name == 't2m':
-            opt.dim_pose = 263
-        elif opt.dataset_name == 'kit':
+        if opt.dataset_name == 'kit':
             opt.dim_pose = 251
         else:
             raise KeyError('Dataset not Recognized!!!')
@@ -109,8 +107,6 @@ def build_evaluators(opt):
                                       device=opt['device'])
 
     ckpt_dir = opt['dataset_name']
-    if opt['dataset_name'] == 'humanml':
-        ckpt_dir = 't2m'
 
     checkpoint = torch.load(pjoin(opt['checkpoints_dir'], ckpt_dir, 'text_mot_match', 'model', 'finest.tar'),
                             map_location=opt['device'])
@@ -134,7 +130,7 @@ class EvaluatorWrapper(object):
             'max_text_len': 20,
             'dim_text_hidden': 512,
             'dim_coemb_hidden': 512,
-            'dim_pose': 263 if dataset_name == 'humanml' else 251,
+            'dim_pose': 251,
             'dim_movement_enc_hidden': 512,
             'dim_movement_latent': 512,
             'checkpoints_dir': './checkpoints',

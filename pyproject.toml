@@ -17,6 +17,8 @@ dependencies = [
     "imageio",
     "tqdm",
     "tensorboard",
+    "graphviz>=0.21",
+    "torchview>=0.2.7",
 ]
 
 [dependency-groups]

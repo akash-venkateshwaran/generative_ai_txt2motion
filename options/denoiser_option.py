@@ -14,7 +14,6 @@ def arg_parse(is_train=False):
     parser.add_argument("--gpu_id", type=int, default=0, help="GPU id")
 
     ## dataloader
-    parser.add_argument("--dataset_name", type=str, default="t2m", help="dataset directory", choices=["t2m", "kit"])
     parser.add_argument("--batch_size", default=64, type=int, help="batch size")
     parser.add_argument("--max_motion_length", type=int, default=196, help="Max length of motion")
     parser.add_argument("--unit_length", type=int, default=4, help="Downscale ratio of VAE")
@@ -64,6 +63,7 @@ def arg_parse(is_train=False):
     parser.add_argument("--eval_every_e", default=10, type=int, help="save eval results every n epoch")
 
     opt = parser.parse_args()
+    opt.dataset_name = "kit"  # only KIT-ML is supported; kept as an attribute for checkpoint/log paths
     opt.classifier_free_guidance = opt.cond_scale > 1.0
     torch.cuda.set_device(opt.gpu_id)
     opt.device = torch.device("cpu" if opt.gpu_id == -1 else "cuda:" + str(opt.gpu_id))
@@ -77,31 +77,16 @@ def arg_parse(is_train=False):
     os.makedirs(opt.eval_dir, exist_ok=True)
     os.makedirs(opt.log_dir, exist_ok=True)
 
-    if opt.dataset_name == "t2m":
-        opt.data_root = './dataset/humanml3d/'
-        opt.motion_dir = pjoin(opt.data_root, 'new_joint_vecs')
-        opt.text_dir = pjoin(opt.data_root, 'texts')
-        opt.joints_num = 22
-        opt.pose_dim = 263
-        opt.contact_joints = [7, 10, 8, 11]
-        opt.fps = 20
-        opt.radius = 4
-        opt.kinematic_chain = paramUtil.t2m_kinematic_chain
-        opt.dataset_opt_path = './checkpoints/t2m/Comp_v6_KLD005/opt.txt'
-
-    elif opt.dataset_name == "kit":
-        opt.data_root = './dataset/kit-ml/'
-        opt.motion_dir = pjoin(opt.data_root, 'new_joint_vecs')
-        opt.text_dir = pjoin(opt.data_root, 'texts')
-        opt.joints_num = 21
-        opt.pose_dim = 251
-        opt.contact_joints = [19, 20, 14, 15]
-        opt.fps = 12.5
-        opt.radius = 240 * 8
-        opt.kinematic_chain = paramUtil.kit_kinematic_chain
-        opt.dataset_opt_path = './checkpoints/kit/Comp_v6_KLD005/opt.txt'
-    else:
-        raise KeyError('Dataset Does not Exists')
+    opt.data_root = './dataset/KIT-ML/'
+    opt.motion_dir = pjoin(opt.data_root, 'new_joint_vecs')
+    opt.text_dir = pjoin(opt.data_root, 'texts')
+    opt.joints_num = 21
+    opt.pose_dim = 251
+    opt.contact_joints = [19, 20, 14, 15]
+    opt.fps = 12.5
+    opt.radius = 240 * 8
+    opt.kinematic_chain = paramUtil.kit_kinematic_chain
+    opt.dataset_opt_path = './checkpoints/kit/Comp_v6_KLD005/opt.txt'
     
     opt.text_dir = pjoin(opt.data_root, 'texts')
 

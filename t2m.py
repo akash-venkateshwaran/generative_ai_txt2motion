@@ -57,7 +57,7 @@ class Text2Motion:
     """
     Text-to-Motion Generation for a Single Text.
     """
-    def __init__(self, denoiser_name, dataset_name="t2m"):
+    def __init__(self, denoiser_name, dataset_name="kit"):
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.opt = get_opt(f"checkpoints/{dataset_name}/{denoiser_name}/opt.txt", self.device)
         self.vae_opt = get_opt(f"checkpoints/{dataset_name}/{self.opt.vae_name}/opt.txt", self.device)

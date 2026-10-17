@@ -5,7 +5,6 @@ import torch.nn as nn
 from os.path import join as pjoin
 
 from transformers import AutoModel, AutoTokenizer
-from transformers.utils import move_cache
 
 from transformers import CLIPModel
 class FrozenCLIPTextEncoder(nn.Module):
@@ -14,7 +13,6 @@ class FrozenCLIPTextEncoder(nn.Module):
     """
     def __init__(self, opt):
         super().__init__()
-        move_cache()
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
         self.opt = opt

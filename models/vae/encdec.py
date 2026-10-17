@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from models.skeleton.conv import ResSTConv, get_activation
 from models.skeleton.pool import STPool, STUnpool
-from utils.paramUtil import kit_adj_list, t2m_adj_list
+from utils.paramUtil import kit_adj_list
 from utils.skeleton import adj_list_to_edges
 
 
@@ -135,10 +135,7 @@ class STConvEncoder(nn.Module):
         super(STConvEncoder, self).__init__()
 
         # adjacency list
-        self.adj_list = {
-            "t2m": t2m_adj_list,
-            "kit": kit_adj_list,
-        }[opt.dataset_name]
+        self.adj_list = kit_adj_list
 
         # topology
         self.edge_list = [adj_list_to_edges(self.adj_list)]

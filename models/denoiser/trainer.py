@@ -14,7 +14,6 @@ from utils.eval_t2m import evaluation_denoiser, test_denoiser
 from utils.utils import print_current_loss, attn2img
 from utils.motion_process import recover_from_ric
 from utils.plot_script import plot_3d_motion
-from visualization.joints2bvh import Joint2BVHConvertor 
 
 def def_value():
     return 0.0
@@ -347,11 +346,9 @@ class DenoiserTrainer:
             metrics["mm"].append(mm)
 
             if save_motion:
-                converter = Joint2BVHConvertor()
                 motion_save_dir = pjoin(save_dir, f"motion-steps{self.opt.num_inference_timesteps}-{i:02d}")
                 os.makedirs(motion_save_dir, exist_ok=True)
                 for i, (motion, caption) in enumerate(zip(pred_motion, caption_list)):
-                    _, ik_joint = converter.convert(motion, pjoin(motion_save_dir, f"{i:06d}_ik.bvh"), foot_ik=True)
                     plot_3d_motion(pjoin(motion_save_dir, f"{i:06d}.mp4"), self.opt.kinematic_chain, motion, title=caption, fps=self.opt.fps)
                     np.savez(pjoin(motion_save_dir, f"{i:06d}.npz"), motion=motion, caption=caption)
 

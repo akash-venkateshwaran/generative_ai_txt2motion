@@ -9,11 +9,11 @@ class STPool(nn.Module):
     """
     def __init__(
         self,
-        dataset="t2m",
+        dataset="kit",
         depth=0,
     ):
-        if not dataset in ["t2m", "kit"]:
-            raise ValueError("dataset should be 't2m' or 'kit'")
+        if dataset != "kit":
+            raise ValueError("dataset should be 'kit'")
         
         super(STPool, self).__init__()
 
@@ -23,38 +23,21 @@ class STPool(nn.Module):
     
     def _get_skeleton_pooling(self, dataset, depth):
         if depth == 0:
-            if dataset == "t2m":
-                weight = torch.zeros(12, 22)
-                mapping = [
-                    [(0, 1, 2, 3), 0],       # root
-                    [(0, 1, 4), 1],          # left hip
-                    [(4, 7, 10), 2],         # left leg
-                    [(0, 2, 5), 3],          # right hip
-                    [(5, 8, 11), 4],         # right leg
-                    [(0, 3, 6, 9), 5],       # spine
-                    [(9, 6, 12, 13, 14), 6], # chest
-                    [(9, 13, 16), 7],        # left shoulder
-                    [(16, 18, 20), 8],       # left arm
-                    [(9, 14, 17), 9],        # right shoulder
-                    [(17, 19, 21), 10],      # right arm
-                    [(9, 12, 15), 11],       # head
-                ]
-            else:
-                weight = torch.zeros(12, 21)
-                mapping = [
-                    [(0, 1, 11, 16), 0],   # root
-                    [(0, 16, 17, 18), 1],  # left hip
-                    [(17, 18, 19, 20), 2], # left leg
-                    [(0, 11, 12, 13), 3],  # right hip
-                    [(12, 13, 14, 15), 4], # right leg
-                    [(0, 1, 2, 3), 5],     # spine
-                    [(2, 3, 5, 8, 4), 6],  # chest
-                    [(3, 8, 9), 7],        # left shoulder
-                    [(8, 9, 10), 8],       # left arm
-                    [(3, 5, 6), 9],        # right shoulder
-                    [(5, 6, 7), 10],       # right arm
-                    [(3, 4), 11],          # head
-                ]
+            weight = torch.zeros(12, 21)
+            mapping = [
+                [(0, 1, 11, 16), 0],   # root
+                [(0, 16, 17, 18), 1],  # left hip
+                [(17, 18, 19, 20), 2], # left leg
+                [(0, 11, 12, 13), 3],  # right hip
+                [(12, 13, 14, 15), 4], # right leg
+                [(0, 1, 2, 3), 5],     # spine
+                [(2, 3, 5, 8, 4), 6],  # chest
+                [(3, 8, 9), 7],        # left shoulder
+                [(8, 9, 10), 8],       # left arm
+                [(3, 5, 6), 9],        # right shoulder
+                [(5, 6, 7), 10],       # right arm
+                [(3, 4), 11],          # head
+            ]
 
             new_edges = adj_list_to_edges([
                 [1, 3, 5],
